@@ -10,60 +10,6 @@ import (
 	"github.com/cihangir/stringext"
 )
 
-// // Generate generates code according to the schema.
-// func (s *Schema) Generate() ([]byte, error) {
-// 	var buf bytes.Buffer
-
-// 	s.Resolve(nil)
-
-// 	name := strings.ToLower(strings.Split(s.Title, " ")[0])
-// 	templates.ExecuteTemplate(&buf, "package.tmpl", name)
-
-// 	// TODO: Check if we need time.
-// 	templates.ExecuteTemplate(&buf, "imports.tmpl", []string{
-// 		"encoding/json", "fmt", "io", "reflect",
-// 		"net/http", "runtime", "time", "bytes",
-// 	})
-// 	templates.ExecuteTemplate(&buf, "service.tmpl", struct {
-// 		Name    string
-// 		URL     string
-// 		Version string
-// 	}{
-// 		Name:    name,
-// 		URL:     s.URL(),
-// 		Version: s.Version,
-// 	})
-
-// 	for _, name := range sortedKeys(s.Properties) {
-// 		schema := s.Properties[name]
-// 		// Skipping definitions because there is no links, nor properties.
-// 		if schema.Links == nil && schema.Properties == nil {
-// 			continue
-// 		}
-
-// 		context := struct {
-// 			Name       string
-// 			Definition *Schema
-// 		}{
-// 			Name:       name,
-// 			Definition: schema,
-// 		}
-
-// 		templates.ExecuteTemplate(&buf, "struct.tmpl", context)
-// 		templates.ExecuteTemplate(&buf, "funcs.tmpl", context)
-// 	}
-
-// 	// Remove blank lines added by text/template
-// 	bytes := newLinesRegex.ReplaceAll(buf.Bytes(), []byte(""))
-
-// 	// Format sources
-// 	clean, err := format.Source(bytes)
-// 	if err != nil {
-// 		return buf.Bytes(), err
-// 	}
-// 	return clean, nil
-// }
-
 var newLinesRegex = regexp.MustCompile(`(?m:\s*$)`)
 
 // Resolve resolves reference inside the schema.
