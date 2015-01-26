@@ -122,7 +122,7 @@ func (s *Schema) goType(required bool, force bool) (goType string) {
 				continue
 			}
 			buf := bytes.NewBufferString("struct {")
-			for _, name := range sortedKeys(s.Properties) {
+			for _, name := range SortedKeys(s.Properties) {
 				prop := s.Properties[name]
 				req := stringext.Contains(name, s.Required) || force
 				templates.ExecuteTemplate(buf, "field.tmpl", struct {
@@ -236,7 +236,7 @@ func (l *Link) GoType() string {
 	return l.Schema.goType(true, false)
 }
 
-func sortedKeys(m map[string]*Schema) (keys []string) {
+func SortedKeys(m map[string]*Schema) (keys []string) {
 	for key := range m {
 		keys = append(keys, key)
 	}
