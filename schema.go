@@ -19,6 +19,9 @@ type Schema struct {
 	Schema *Reference `json:"$schema,omitempty"`
 
 	Definitions map[string]*Schema `json:"definitions,omitempty"`
+	// Functions holds the functions of a schema, it is not in the json-schema
+	// specification, custom made for this package
+	Functions map[string]*Schema `json:"functions,omitempty"`
 
 	// Numbers
 	MultipleOf       float64 `json:"multipleOf,omitempty"`
@@ -42,7 +45,7 @@ type Schema struct {
 	PatternProperties    map[string]*Schema     `json:"patternProperties,omitempty"`
 
 	// Arrays
-	Items           *Schema     `json:"items,omitempty"`
+	Items           []*Schema   `json:"items,omitempty"`
 	MinItems        int         `json:"minItems,omitempty"`
 	MaxItems        int         `json:"maxItems,omitempty"`
 	UniqueItems     bool        `json:"uniqueItems,omitempty"`
@@ -63,10 +66,11 @@ type Schema struct {
 
 // Link represents a Link description.
 type Link struct {
-	Title       string  `json:"title,omitempty"`
-	Description string  `json:"description,omitempty"`
-	HRef        *HRef   `json:"href,omitempty"`
-	Rel         string  `json:"rel,omitempty"`
-	Method      string  `json:"method,omitempty"`
-	Schema      *Schema `json:"schema,omitempty"`
+	Title        string  `json:"title,omitempty"`
+	Description  string  `json:"description,omitempty"`
+	HRef         *HRef   `json:"href,omitempty"`
+	Rel          string  `json:"rel,omitempty"`
+	Method       string  `json:"method,omitempty"`
+	Schema       *Schema `json:"schema,omitempty"`
+	TargetSchema *Schema `json:"targetSchema,omitempty"`
 }

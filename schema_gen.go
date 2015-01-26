@@ -23,11 +23,14 @@ func (s *Schema) Resolve(r *Schema) *Schema {
 	for n, p := range s.Properties {
 		s.Properties[n] = p.Resolve(r)
 	}
+	for n, p := range s.Functions {
+		s.Functions[n] = p.Resolve(r)
+	}
 	for n, p := range s.PatternProperties {
 		s.PatternProperties[n] = p.Resolve(r)
 	}
-	if s.Items != nil {
-		s.Items = s.Items.Resolve(r)
+	for n, p := range s.Items {
+		s.Items[n] = p.Resolve(r)
 	}
 	if s.Ref != nil {
 		s = s.Ref.Resolve(r)
@@ -104,8 +107,8 @@ func (s *Schema) goType(required bool, force bool) (goType string) {
 		case "any":
 			goType = "interface{}"
 		case "array":
-			if s.Items != nil {
-				goType = "[]" + s.Items.goType(required, force)
+			if len(s.Items) == 1 {
+				goType = "[]" + s.Items[0].goType(required, force)
 			} else {
 				goType = "[]interface{}"
 			}
@@ -170,6 +173,20 @@ func (s *Schema) Values(name string, l *Link) []string {
 		}
 	}
 	return values
+}
+
+// Argumentize returns a string that can be used as an argument into a function
+func Argumentize(s *Schema) string {
+	switch s.Type {
+	case "array":
+		if len(s.Items) == 1 {
+			return fmt.Sprintf("[]*models.%s", s.Items[0].Title)
+		} else {
+			return "[]interface{}"
+		}
+	default:
+		return fmt.Sprintf("models.%s", s.Title)
+	}
 }
 
 // URL returns schema base URL.

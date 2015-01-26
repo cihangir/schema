@@ -56,9 +56,9 @@ var typeTests = []struct {
 	{
 		Schema: &Schema{
 			Type: "array",
-			Items: &Schema{
+			Items: []*Schema{&Schema{
 				Type: "string",
-			},
+			}},
 		},
 		Type: "[]string",
 	},
