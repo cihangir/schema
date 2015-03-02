@@ -182,17 +182,43 @@ func (s *Schema) Values(name string, l *Link) []string {
 }
 
 // Argumentize returns a string that can be used as an argument into a function
-func Argumentize(s *Schema) string {
-	switch s.Type {
-	case "array":
-		if len(s.Items) == 1 {
-			return fmt.Sprintf("[]*models.%s", s.Items[0].Title)
-		} else {
-			return "[]interface{}"
+func Argumentize(s interface{}) string {
+	switch s.(type) {
+	case *Schema:
+		sc := s.(*Schema)
+		switch sc.Type {
+		case "array":
+			if len(sc.Items) == 1 {
+				switch sc.Items[0].Type {
+				case "object":
+					return fmt.Sprintf("[]*models.%s", sc.Items[0].Title)
+				case "number":
+					return fmt.Sprintf("[]%s", sc.Items[0].Format)
+				case "string":
+					return fmt.Sprintf("[]%s", "string")
+				case "boolean":
+					return fmt.Sprintf("[]%s", "bool")
+				default:
+					panic("unsupported argumentize format")
+				}
+			} else {
+				return "[]interface{}"
+			}
+		case "number":
+			return sc.Format
+		case "string":
+			return "string"
+		case "boolean":
+			return "bool"
+		default:
+			return fmt.Sprintf("models.%s", sc.Title)
 		}
-	default:
-		return fmt.Sprintf("models.%s", s.Title)
+	case *bool:
+		return "bool"
+	case *int64:
+		return "int64"
 	}
+	panic("unknown type") // todo return interface instead
 }
 
 // URL returns schema base URL.
