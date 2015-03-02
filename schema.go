@@ -19,9 +19,6 @@ type Schema struct {
 	Schema *Reference `json:"$schema,omitempty"`
 
 	Definitions map[string]*Schema `json:"definitions,omitempty"`
-	// Functions holds the functions of a schema, it is not in the json-schema
-	// specification, custom made for this package
-	Functions map[string]*Schema `json:"functions,omitempty"`
 
 	// Numbers
 	MultipleOf       float64 `json:"multipleOf,omitempty"`
@@ -62,6 +59,15 @@ type Schema struct {
 
 	// Links
 	Links []Link `json:"links,omitempty"`
+
+	// Below variables are not in the json-schema specification, custom made for
+	// this package
+
+	// Functions holds the functions of a schema,
+	Functions map[string]*Schema `json:"functions,omitempty"`
+
+	// if the struct, property or the function is exported or not
+	Private bool `json:"private,omitempty"`
 }
 
 // Link represents a Link description.

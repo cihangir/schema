@@ -9,7 +9,7 @@ import (
 // Helpers holds helpers for templates
 var Helpers = template.FuncMap{
 	"AsComment":               stringext.AsComment,
-	"JSONTag":                 stringext.JSONTag,
+	"JSONTagWithIgnored":      stringext.JSONTagWithIgnored,
 	"Params":                  Params,
 	"Args":                    Args,
 	"Values":                  Values,
@@ -32,7 +32,7 @@ func init() {
 	templates = template.Must(Parse(templates))
 }
 
-var tmpls = map[string]string{"field.tmpl": `{{DepunctWithInitialUpper .Name}} {{.Type}} {{JSONTag .Name .Required}} {{AsComment .Definition.Description}}
+var tmpls = map[string]string{"field.tmpl": `{{DepunctWithInitialUpper .Name}} {{.Type}} {{JSONTagWithIgnored .Name .Required .Definition.Private}} {{AsComment .Definition.Description}}
 `,
 	"funcs.tmpl": `{{$Name := .Name}}
 {{$Def := .Definition}}
