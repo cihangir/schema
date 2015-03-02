@@ -103,12 +103,9 @@ func (s *Schema) goType(required bool, force bool) (goType string) {
 			// information about the custom format types. A JSON Schema
 			// validator will ignore any format type that it does not
 			// understand.
-			switch s.Format {
-			case "int64":
-				goType = "int64"
-			case "float32":
-				goType = "float32"
-			default:
+			if s.Format != "" {
+				goType = s.Format
+			} else {
 				goType = "float64"
 			}
 		case "integer":
