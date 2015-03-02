@@ -18,13 +18,22 @@ func (s *Schema) Resolve(r *Schema) *Schema {
 		r = s
 	}
 	for n, d := range s.Definitions {
+		if d.Title == "" {
+			d.Title = n
+		}
 		s.Definitions[n] = d.Resolve(r)
 	}
 	for n, p := range s.Properties {
+		if p.Title == "" {
+			p.Title = n
+		}
 		s.Properties[n] = p.Resolve(r)
 	}
-	for n, p := range s.Functions {
-		s.Functions[n] = p.Resolve(r)
+	for n, f := range s.Functions {
+		if f.Title == "" {
+			f.Title = n
+		}
+		s.Functions[n] = f.Resolve(r)
 	}
 	for n, p := range s.PatternProperties {
 		s.PatternProperties[n] = p.Resolve(r)
