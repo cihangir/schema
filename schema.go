@@ -62,6 +62,13 @@ type Schema struct {
 
 	// Links
 	Links []Link `json:"links,omitempty"`
+
+	// Below variables are not in the json-schema specification, custom made for
+	// this package
+
+	// Functions holds the functions of a schema,
+	Functions map[string]*Schema `json:"functions,omitempty"`
+
 }
 
 // Link represents a Link description.
