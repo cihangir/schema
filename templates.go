@@ -32,7 +32,7 @@ func init() {
 	templates = template.Must(Parse(templates))
 }
 
-var tmpls = map[string]string{"field.tmpl": `{{DepunctWithInitialUpper .Name}} {{.Type}} {{JSONTagWithIgnored .Name .Required .Definition.Private}} {{AsComment .Definition.Description}}
+var tmpls = map[string]string{"field.tmpl": `{{DepunctWithInitialUpper .Name}} {{.Type}} {{JSONTagWithIgnored .Name .Required .Definition.Private .Type}} {{AsComment .Definition.Description}}
 `,
 	"funcs.tmpl": `{{$Name := .Name}}
 {{$Def := .Definition}}

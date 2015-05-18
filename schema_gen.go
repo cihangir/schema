@@ -130,7 +130,7 @@ func (s *Schema) goType(required bool, force bool) (goType string) {
 			buf := bytes.NewBufferString("struct {")
 			for _, name := range SortedKeys(s.Properties) {
 				prop := s.Properties[name]
-				req := stringext.Contains(name, s.Required) || force
+				req := stringext.Contains(name, s.Required)
 				templates.ExecuteTemplate(buf, "field.tmpl", struct {
 					Definition *Schema
 					Name       string
@@ -148,6 +148,10 @@ func (s *Schema) goType(required bool, force bool) (goType string) {
 			goType = buf.String()
 		case "null":
 			continue
+		case "error":
+			goType = "error"
+		case "custom":
+			goType = s.Format
 		default:
 			panic("unknown field")
 		}
