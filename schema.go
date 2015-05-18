@@ -68,6 +68,9 @@ type Schema struct {
 
 	// if the struct, property or the function is exported or not
 	Private bool `json:"private,omitempty"`
+
+	// Generators holds the generator plugins for current schema
+	Generators []string `json:"generators,omitempty"`
 }
 
 // Link represents a Link description.
