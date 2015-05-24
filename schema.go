@@ -84,18 +84,18 @@ type Link struct {
 	TargetSchema *Schema `json:"targetSchema,omitempty"`
 }
 
-type Generator map[string]string
+type Generator map[string]interface{}
 
-func (g *Generator) Get(key string) string {
+func (g *Generator) Get(key string) interface{} {
 	d, ok := (*g)[key]
 	if !ok {
-		return ""
+		return nil
 	}
 
 	return d
 }
 
-func (g *Generator) GetWithDefault(key, def string) string {
+func (g *Generator) GetWithDefault(key string, def interface{}) interface{} {
 	d, ok := (*g)[key]
 	if !ok {
 		return def
@@ -104,11 +104,15 @@ func (g *Generator) GetWithDefault(key, def string) string {
 	return d
 }
 
-func (g *Generator) SetNX(key, val string) {
+func (g *Generator) SetNX(key string, val interface{}) {
 	_, ok := (*g)[key]
 	if !ok {
 		(*g)[key] = val
 	}
+}
+
+func (g *Generator) Set(key string, val interface{}) {
+	(*g)[key] = val
 }
 
 type Generators []map[string]Generator
