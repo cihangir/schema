@@ -70,7 +70,7 @@ type Schema struct {
 	Private bool `json:"private,omitempty"`
 
 	// Generators holds the generator plugins for current schema
-	Generators []string `json:"generators,omitempty"`
+	Generators Generators `json:"generators,omitempty"`
 }
 
 // Link represents a Link description.
@@ -82,4 +82,48 @@ type Link struct {
 	Method       string  `json:"method,omitempty"`
 	Schema       *Schema `json:"schema,omitempty"`
 	TargetSchema *Schema `json:"targetSchema,omitempty"`
+}
+
+type Generator map[string]string
+
+func (g *Generator) Get(key string) string {
+	d, ok := (*g)[key]
+	if !ok {
+		return ""
+	}
+
+	return d
+}
+
+func (g *Generator) GetWithDefault(key, def string) string {
+	d, ok := (*g)[key]
+	if !ok {
+		return def
+	}
+
+	return d
+}
+
+func (g *Generator) SetNX(key, val string) {
+	_, ok := (*g)[key]
+	if !ok {
+		(*g)[key] = val
+	}
+}
+
+type Generators []map[string]Generator
+
+func (g Generators) Has(s string) bool {
+	_, has := g.Get(s)
+	return has
+}
+
+func (g *Generators) Get(s string) (Generator, bool) {
+	for _, m := range *g {
+		if d, ok := m[s]; ok {
+			return d, ok
+		}
+	}
+
+	return nil, false
 }

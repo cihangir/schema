@@ -25,8 +25,7 @@ func (rf Reference) Resolve(r *Schema) *Schema {
 	if !strings.HasPrefix(string(rf), fragment) {
 		panic(fmt.Sprintf("non-fragment reference are not supported : %s", rf))
 	}
-	var node interface{}
-	node = r
+	node := (interface{})(r)
 	for _, t := range strings.Split(string(rf), separator)[1:] {
 		t = decode(t)
 		v := reflect.Indirect(reflect.ValueOf(node))
