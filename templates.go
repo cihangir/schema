@@ -261,7 +261,6 @@ func ({{ToLowerFirst .Name}} *{{.Name}}) Validate() error {
 
 	"funcs2.tmpl": `{{range .}}
     func (s *{{.}}){{.}}() {
-
     }
 {{end}}`,
 }
@@ -269,10 +268,10 @@ func ({{ToLowerFirst .Name}} *{{.Name}}) Validate() error {
 // Parse parses declared templates.
 func Parse(t *template.Template) (*template.Template, error) {
 	for name, s := range tmpls {
-		var tmpl *template.Template
 		if t == nil {
 			t = template.New(name)
 		}
+		var tmpl *template.Template
 		if name == t.Name() {
 			tmpl = t
 		} else {
