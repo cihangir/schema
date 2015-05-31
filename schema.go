@@ -63,6 +63,9 @@ type Schema struct {
 	// Below variables are not in the json-schema specification, custom made for
 	// this package
 
+	// Holds the order of property, for more info https://github.com/json-schema/json-schema/issues/87
+	PropertyOrder int `json:"propertyOrder,omitempty"`
+
 	// Functions holds the functions of a schema,
 	Functions map[string]*Schema `json:"functions,omitempty"`
 
