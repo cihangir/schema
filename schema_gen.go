@@ -108,7 +108,7 @@ func (s *Schema) goType(required bool, force bool) (goType string) {
 			} else {
 				goType = "float64"
 			}
-		case "integer":
+		case "integer", "int":
 			goType = "int"
 		case "any":
 			goType = "interface{}"
@@ -272,12 +272,64 @@ func (l *Link) GoType() string {
 	return l.Schema.goType(true, false)
 }
 
-func SortedKeys(m map[string]*Schema) (keys []string) {
-	for key := range m {
-		keys = append(keys, key)
+// propertyOrderedKey attaches the methods of Interface, sorting in increasing order.
+type propertyOrderedKey struct {
+	key           string
+	propertyOrder int
+}
+
+type propertyOrderedKeys []propertyOrderedKey
+
+func (p propertyOrderedKeys) Len() int           { return len(p) }
+func (p propertyOrderedKeys) Less(i, j int) bool { return p[i].propertyOrder < p[j].propertyOrder }
+func (p propertyOrderedKeys) Swap(i, j int)      { p[i], p[j] = p[j], p[i] }
+
+func (p propertyOrderedKeys) prependKeysTo(to []string) []string {
+	newSlice := make([]string, 0)
+	for _, k := range p {
+		newSlice = append(newSlice, k.key)
 	}
-	sort.Strings(keys)
-	return
+
+	return append(newSlice, to...)
+}
+
+// SortedKeys sorts given schema map according to PropertyOrder property, 0
+// valued properties are sort with strings.Sort
+func SortedKeys(m map[string]*Schema) (keys []string) {
+	unorderedKeys := make([]string, 0)
+	orderedProperties := propertyOrderedKeys{}
+
+	for key := range m {
+		if m[key].PropertyOrder == 0 {
+			unorderedKeys = append(unorderedKeys, key)
+		} else {
+			orderedProperties = append(orderedProperties, propertyOrderedKey{
+				key:           key,
+				propertyOrder: m[key].PropertyOrder,
+			})
+		}
+	}
+
+	// sort unordered keys first
+	sort.Strings(unorderedKeys)
+
+	// sort order given properties
+	sort.Sort(orderedProperties)
+
+	// conbine them
+	return orderedProperties.prependKeysTo(unorderedKeys)
+}
+
+// SortedSchema sorts given map[string]Schema and returns a slice of Schema
+// using SortedKeys function
+func SortedSchema(m map[string]*Schema) []*Schema {
+	keys := SortedKeys(m)
+	ss := make([]*Schema, len(m))
+	for i, k := range keys {
+		ss[i] = m[k]
+	}
+
+	return ss
 }
 
 // Args creates arguments string
