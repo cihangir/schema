@@ -110,11 +110,14 @@ func (g *Generator) GetWithDefault(key string, def interface{}) interface{} {
 func (g *Generator) SetNX(key string, val interface{}) {
 	_, ok := (*g)[key]
 	if !ok {
-		(*g)[key] = val
+		g.Set(key, val)
 	}
 }
 
 func (g *Generator) Set(key string, val interface{}) {
+	if *g == nil {
+		*g = make(map[string]interface{})
+	}
 	(*g)[key] = val
 }
 
