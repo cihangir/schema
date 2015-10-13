@@ -17,6 +17,7 @@ func (s *Schema) Resolve(r *Schema) *Schema {
 	if r == nil {
 		r = s
 	}
+
 	for n, d := range s.Definitions {
 		if d.Title == "" {
 			d.Title = n
@@ -53,6 +54,29 @@ func (s *Schema) Resolve(r *Schema) *Schema {
 	for _, l := range s.Links {
 		l.Resolve(r)
 	}
+
+	for route, handlers := range s.Paths {
+		for verb, handler := range handlers {
+			for parameterIndex, parameter := range handler.Parameters {
+				if parameter.Schema == nil {
+					continue
+				}
+
+				handler.Parameters[parameterIndex].Schema = parameter.Schema.Resolve(r)
+			}
+
+			for responseCode, response := range handler.Responses {
+				if response == nil {
+					continue
+				}
+
+				handler.Responses[responseCode] = response.Resolve(r)
+			}
+
+			s.Paths[route][verb] = handler
+		}
+	}
+
 	return s
 }
 

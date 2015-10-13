@@ -74,6 +74,34 @@ type Schema struct {
 
 	// Generators holds the generator plugins for current schema
 	Generators Generators `json:"generators,omitempty"`
+
+	// rest endpoint paths
+	Paths map[string]map[string]*Path `json:"paths,omitempty"`
+}
+
+type Path struct {
+	Consumes    []string              `json:"consumes,omitempty"`
+	Description string                `json:"description,omitempty"`
+	OperationID string                `json:"operationId,omitempty"`
+	Parameters  []*Parameter          `json:"parameters,omitempty"`
+	Produces    []string              `json:"produces,omitempty"`
+	Responses   map[string]*Schema    `json:"responses,omitempty"`
+	Security    []map[string][]string `json:"security,omitempty"`
+	Summary     string                `json:"summary,omitempty"`
+	Tags        []string              `json:"tags,omitempty"`
+}
+
+type Parameter struct {
+	Description string `json:"description,omitempty"`
+	Format      string `json:"format,omitempty"`
+	Maximum     int    `json:"maximum,omitempty"`
+	Minimum     int    `json:"minimum,omitempty"`
+	Type        string `json:"type,omitempty"`
+
+	In       string  `json:"in,omitempty"`
+	Name     string  `json:"name,omitempty"`
+	Required bool    `json:"required,omitempty"`
+	Schema   *Schema `json:"schema,omitempty"`
 }
 
 // Link represents a Link description.
