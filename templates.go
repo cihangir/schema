@@ -35,7 +35,7 @@ func init() {
 var tmpls = map[string]string{"field.tmpl": `
 
 {{AsComment .Definition.Description}}
-{{DepunctWithInitialUpper .Name}} {{.Type}} {{JSONTagWithIgnored .Name .Required .Definition.Private .Type}}
+{{DepunctWithInitialUpper .Name}} {{.Type}} {{JSONTagWithIgnored .Name .Required .Definition.Private .Type .Definition.Tags}}
 `,
 	"funcs.tmpl": `{{$Name := .Name}}
 {{$Def := .Definition}}

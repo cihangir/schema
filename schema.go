@@ -13,6 +13,7 @@ type Schema struct {
 	Example  interface{} `json:"example,omitempty"`
 	Format   string      `json:"format,omitempty"`
 
+	Tags string      `json:"tags,omitempty"`
 	Type interface{} `json:"type,omitempty"`
 
 	Ref    *Reference `json:"$ref,omitempty"`
