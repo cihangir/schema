@@ -227,7 +227,7 @@ func Argumentize(s interface{}) string {
 				case "boolean":
 					return fmt.Sprintf("[]%s", "bool")
 				default:
-					panic("unsupported argumentize format")
+					panic(fmt.Sprintf("unsupported argumentize format: %+v", sc))
 				}
 			} else {
 				return "[]interface{}"
